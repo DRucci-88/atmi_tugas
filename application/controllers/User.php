@@ -5,6 +5,9 @@ if (!defined('BASEPATH'))
 
 class User extends CI_Controller
 {
+
+    public $newData;
+
     function __construct()
     {
         parent::__construct();
@@ -14,10 +17,8 @@ class User extends CI_Controller
         // is_login();
         $this->load->model('User_model');
         $this->load->model('Mahasiswa_model');
-        $this->load->library('form_validation');        
+        $this->load->library('form_validation');
         $this->load->library('datatables');
-
-        
     }
 
     public function index()
@@ -62,7 +63,7 @@ class User extends CI_Controller
             'tanggal_lahir' => set_value('tanggal_lahir'),
             'nomor_telepon' => set_value('nomor_telepon'),
 
-            // USER
+            // USER 
             'button'        => 'Create',
             'action'        => site_url('user/create_action'),
             'id_users'      => set_value('id_users'),
@@ -73,12 +74,13 @@ class User extends CI_Controller
             'is_aktif'      => set_value('is_aktif'),
             
         );
+        // $this->template->load('template','user/tbl_user_form', $data);
         $this->template->load('template','user/tbl_user_form', $data);
     }
     
     public function create_action() 
     {
-        $this->_rules();
+        $this->_rules_user();
         $foto = $this->upload_foto();
         if ($this->form_validation->run() == FALSE) {
             $this->create();
@@ -93,75 +95,115 @@ class User extends CI_Controller
             // var_dump($this->input->post());
 
             // USER
-            $data['user'] = array(
+            $this->newData['user'] = array(
                 'id_users'      => $availableId,
                 'full_name'     => $this->input->post('full_name',TRUE),
                 'email'         => $this->input->post('email',TRUE),
                 'password'      => $hashPassword,
-                'images'        => $foto['file_name'],
+                'images'        => $foto['file_name'] ? $foto['file_name'] : "Avatar1.svg",
                 'id_user_level' => $this->input->post('id_user_level',TRUE),
                 'is_aktif'      => $this->input->post('is_aktif',TRUE)
             );
+            $this->session->set_userdata('newData', $this->newData['user']);
 
-            // BIODATA MAHASISWA
-            // $data['mahasiswa'] = [
-            //     'mahasiswa_id'              => $availableId,
-            //     'mahasiswa_name'            => $this->input->post('full_name', TRUE),
-            //     'mahasiswa_nim'             => $this->input->post('nim', TRUE),
-            //     'mahasiswa_jurusan'         => $this->input->post('jurusan', TRUE),
-            //     'mahasiswa_asal_sekolah'    => $this->input->post('asal_sekolah', TRUE),
-            //     'mahasiswa_tanggal_lahir'   => $this->input->post('tanggal_lahir', TRUE),
-            //     'mahasiswa_nomor_telepon'   => $this->input->post('nomor_telepon', TRUE),
-            // ];
-
-            // var_dump($data);
-
-            $this->User_model->insert($data['user']);
+            if(strcmp($this->newData['user']['id_user_level'],'3') === 0){
+                $this->create_mahasiswa();
+                // var_dump($this->newData);
+            }
+            
+            // $this->User_model->insert($this->newData['user']);
             // $this->Mahasiswa_model->insert($data['mahasiswa']);
-            $this->session->set_flashdata('message', 'Create Record Success');
-            redirect(site_url('user'));
+            // $this->session->set_flashdata('message', 'Create Record Success');
+            // redirect(site_url('user'));
         }
+    }
+
+    public function create_mahasiswa(){
+        // var_dump($this->newData['user']);
+        $data = [
+            'button' => 'insert',
+            'action' => site_url('user/create_action_mahasiswa'),
+            'full_name' => $this->newData['user']['full_name'],
+            'nim'           => set_value('nim'),
+            'jurusan'       => set_value('jurusan'),
+            'asal_sekolah'  => set_value('asal_sekolah'),
+            'tanggal_lahir' => set_value('tanggal_lahir'),
+            'nomor_telepon' => set_value('nomor_telepon'),
+
+            'images' => $this->newData['user']['images']
+
+        ];
+        $this->template->load('template', 'user/tbl_mahasiswa_form', $data);
+    }
+
+    public function create_action_mahasiswa(){
+        // var_dump($this->input->post());
+        // var_dump($this->session->userdata['newData']);
+        // var_dump($this->session->userdata());
+        // $this->session->unset_userdata('newData');
+        // var_dump($this->session->userdata());
+
+        $user = $this->session->userdata['newData'];
+        // BIODATA MAHASISWA
+        $mahasiswa = [
+            'mahasiswa_id'              => $user['id_users'],
+            'mahasiswa_name'            => $this->input->post('full_name', TRUE),
+            'mahasiswa_nim'             => $this->input->post('nim', TRUE),
+            'mahasiswa_jurusan'         => $this->input->post('jurusan', TRUE),
+            'mahasiswa_asal_sekolah'    => $this->input->post('asal_sekolah', TRUE),
+            'mahasiswa_tanggal_lahir'   => $this->input->post('tanggal_lahir', TRUE),
+            'mahasiswa_nomor_telepon'   => $this->input->post('nomor_telepon', TRUE),
+        ];
+        $this->User_model->insert($user);
+        $this->Mahasiswa_model->insert($mahasiswa);
+        $this->session->unset_userdata('newData');
+        $this->session->set_flashdata('message', 'Create Record Success');
+        redirect(site_url('user'));
     }
     
     public function update($id)
     {
         $user = $this->User_model->get_by_id($id);
-        $mahasiswa = $this->Mahasiswa_model->get_by_id($id);
+
+        if ($user || strcmp($user['is_user_level'], '3') === 0){
+            $this->update_mahasiswa($id);
+            return;
+        }
 
         var_dump($user);
-        var_dump($mahasiswa);
+        
 
-        $data = [
-            // BIODATA MAHASISWA
-            'full_name'     => set_value('full_name', $mahasiswa['mahasiswa_name']),
-            'nim'           => set_value('nim', $mahasiswa['mahasiswa_nim']),
-            'jurusan'       => set_value('jurusan', $mahasiswa['mahasiswa_jurusan']),
-            'asal_sekolah'  => set_value('asal_sekolah', $mahasiswa['mahasiswa_asal_sekolah']),
-            'tanggal_lahir' => set_value('tanggal_lahir', $mahasiswa['mahasiswa_tanggal_lahir']),
-            'nomor_telepon' => set_value('nomor_telepon', $mahasiswa['mahasiswa_nomor_telepon']),
+        // $data = [
+        //     // BIODATA MAHASISWA
+        //     'full_name'     => set_value('full_name', $mahasiswa['mahasiswa_name']),
+        //     'nim'           => set_value('nim', $mahasiswa['mahasiswa_nim']),
+        //     'jurusan'       => set_value('jurusan', $mahasiswa['mahasiswa_jurusan']),
+        //     'asal_sekolah'  => set_value('asal_sekolah', $mahasiswa['mahasiswa_asal_sekolah']),
+        //     'tanggal_lahir' => set_value('tanggal_lahir', $mahasiswa['mahasiswa_tanggal_lahir']),
+        //     'nomor_telepon' => set_value('nomor_telepon', $mahasiswa['mahasiswa_nomor_telepon']),
 
-            // USER
-            'button'        => 'Update',
-            'action'        => site_url('user/update_action'),
-            'id_users'      => set_value('id_users', $user['id_users']),
-            'email'         => set_value('email', $user['email']),
-            'password'      => set_value('password', $user['password']),
-            'images'        => set_value('images', $user['images']),
-            'id_user_level' => set_value('id_user_level', $user['id_user_level']),
-            'is_aktif'      => set_value('is_aktif', $user['is_aktif'])
-        ];
+        //     // USER
+        //     'button'        => 'Update',
+        //     'action'        => site_url('user/update_action'),
+        //     'id_users'      => set_value('id_users', $user['id_users']),
+        //     'email'         => set_value('email', $user['email']),
+        //     'password'      => set_value('password', $user['password']),
+        //     'images'        => set_value('images', $user['images']),
+        //     'id_user_level' => set_value('id_user_level', $user['id_user_level']),
+        //     'is_aktif'      => set_value('is_aktif', $user['is_aktif'])
+        // ];
 
-        if ($user !== null || $mahasiswa !== null) {
-            $this->template->load('template','user/tbl_user_form', $data);
-        } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
-            redirect(site_url('user'));
-        }
+        // if ($user !== null || $mahasiswa !== null) {
+        //     $this->template->load('template','user/tbl_user_form', $data);
+        // } else {
+        //     $this->session->set_flashdata('message', 'Record Not Found');
+        //     redirect(site_url('user'));
+        // }
     }
     
     public function update_action() 
     {
-        $this->_rules();
+        $this->_rules_user();
         $foto = $this->upload_foto();
         if ($this->form_validation->run() == FALSE) {
             $this->update($this->input->post('id_users', TRUE));
@@ -190,10 +232,14 @@ class User extends CI_Controller
         }
     }
     
-    
+    public function update_mahasiswa($id){
+        $mahasiswa = $this->Mahasiswa_model->get_by_id($id);
+        var_dump($mahasiswa);
+    }
+
     function upload_foto(){
         $config['upload_path']          = './assets/foto_profil';
-        $config['allowed_types']        = 'gif|jpg|png';
+        $config['allowed_types']        = 'gif|jpg|png|svg';
         //$config['max_size']             = 100;
         //$config['max_width']            = 1024;
         //$config['max_height']           = 768;
@@ -216,7 +262,7 @@ class User extends CI_Controller
         }
     }
 
-    public function _rules() 
+    public function _rules_user() 
     {
         $this->form_validation->set_rules('email', 'email', 'trim|required|valid_email');
         $this->form_validation->set_rules('password', 'password', 'trim|required');
@@ -226,12 +272,12 @@ class User extends CI_Controller
         $this->form_validation->set_rules('id_users', 'id_users', 'trim');
 
         // BIODATA
-        $this->form_validation->set_rules('full_name', 'full name', 'trim|required');
-        $this->form_validation->set_rules('nim', 'nim', 'trim|required');
-        $this->form_validation->set_rules('jurusan', 'jurusan', 'trim|required');
-        $this->form_validation->set_rules('asal_sekolah', 'asal_sekolah', 'trim|required');
-        $this->form_validation->set_rules('tanggal_lahir', 'tanggal_lahir', 'trim|required');
-        $this->form_validation->set_rules('nomor_telepon', 'nomor_telepon', 'trim|required');
+        // $this->form_validation->set_rules('full_name', 'full name', 'trim|required');
+        // $this->form_validation->set_rules('nim', 'nim', 'trim|required');
+        // $this->form_validation->set_rules('jurusan', 'jurusan', 'trim|required');
+        // $this->form_validation->set_rules('asal_sekolah', 'asal_sekolah', 'trim|required');
+        // $this->form_validation->set_rules('tanggal_lahir', 'tanggal_lahir', 'trim|required');
+        // $this->form_validation->set_rules('nomor_telepon', 'nomor_telepon', 'trim|required');
 
         $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
     }
