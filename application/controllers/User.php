@@ -14,8 +14,10 @@ class User extends CI_Controller
         // is_login();
         $this->load->model('User_model');
         $this->load->model('Mahasiswa_model');
-        $this->load->library('form_validation');
+        $this->load->library('form_validation');        
         $this->load->library('datatables');
+
+        
     }
 
     public function index()
@@ -70,11 +72,9 @@ class User extends CI_Controller
             'id_user_level' => set_value('id_user_level'),
             'is_aktif'      => set_value('is_aktif'),
             
-            'title'         => 'Create New '
         );
         $this->template->load('template','user/tbl_user_form', $data);
     }
-    
     
     public function create_action() 
     {
@@ -104,20 +104,20 @@ class User extends CI_Controller
             );
 
             // BIODATA MAHASISWA
-            $data['mahasiswa'] = [
-                'mahasiswa_id'              => $availableId,
-                'mahasiswa_name'            => $this->input->post('full_name', TRUE),
-                'mahasiswa_nim'             => $this->input->post('nim', TRUE),
-                'mahasiswa_jurusan'         => $this->input->post('jurusan', TRUE),
-                'mahasiswa_asal_sekolah'    => $this->input->post('asal_sekolah', TRUE),
-                'mahasiswa_tanggal_lahir'   => $this->input->post('tanggal_lahir', TRUE),
-                'mahasiswa_nomor_telepon'   => $this->input->post('nomor_telepon', TRUE),
-            ];
+            // $data['mahasiswa'] = [
+            //     'mahasiswa_id'              => $availableId,
+            //     'mahasiswa_name'            => $this->input->post('full_name', TRUE),
+            //     'mahasiswa_nim'             => $this->input->post('nim', TRUE),
+            //     'mahasiswa_jurusan'         => $this->input->post('jurusan', TRUE),
+            //     'mahasiswa_asal_sekolah'    => $this->input->post('asal_sekolah', TRUE),
+            //     'mahasiswa_tanggal_lahir'   => $this->input->post('tanggal_lahir', TRUE),
+            //     'mahasiswa_nomor_telepon'   => $this->input->post('nomor_telepon', TRUE),
+            // ];
 
             // var_dump($data);
 
             $this->User_model->insert($data['user']);
-            $this->Mahasiswa_model->insert($data['mahasiswa']);
+            // $this->Mahasiswa_model->insert($data['mahasiswa']);
             $this->session->set_flashdata('message', 'Create Record Success');
             redirect(site_url('user'));
         }

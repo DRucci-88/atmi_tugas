@@ -3,7 +3,7 @@
     <section class="content">
         <div class="box box-warning box-solid">
             <div class="box-header with-border">
-                <h3 class="box-title">UPDATE DATA MAHASISWA</h3>
+                <h3 class="box-title"><?= $button?> DATA</h3>
             </div>
             <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data">
 
@@ -19,7 +19,7 @@
                         </td>
                     </tr>
 
-                    <tr>
+                    <!-- <tr>
                         <td width='200'>NIM <?php echo form_error('nim') ?></td>
                         <td>
                             <input type="text" class="form-control" name="nim" id="nim" placeholder="NIM"
@@ -57,7 +57,7 @@
                             <input type="text" class="form-control" name="nomor_telepon" id="nomor_telepon"
                                 placeholder="Nomor Telepon" value="<?php echo $nomor_telepon; ?>" />
                         </td>
-                    </tr>
+                    </tr> -->
 
                     <!-- USER USER USER USER USER USER USER USER USER USER USER USER USER USER USER  -->
 
