@@ -20,6 +20,14 @@
           </tr>
 
           <tr>
+            <td width='200'>Password <?php echo form_error('password') ?></td>
+            <td>
+              <input type="text" readonly class="form-control" name="password" id="password" placeholder="Password"
+                value="<?php echo $password; ?>" />
+            </td>
+          </tr>
+
+          <tr>
             <td width='200'>NIM <?php echo form_error('nim') ?></td>
             <td>
               <input type="text" class="form-control" name="nim" id="nim" placeholder="NIM"
@@ -59,6 +67,34 @@
             </td>
           </tr>
 
+          <?php
+            if (strcmp($button, 'Update') === 0){
+          ?>
+          <tr>
+            <td width='200'>Email <?php echo form_error('email') ?></td>
+            <td>
+
+              <input type="text" class="form-control" name="email" id="email" placeholder="Email"
+                value="<?php echo $email; ?>" /></td>
+          </tr>
+
+          <tr>
+            <td width='200'>Level User <?php echo form_error('id_user_level') ?></td>
+            <td>
+              <?php echo cmb_dinamis('id_user_level', 'tbl_user_level', 'nama_level', 'id_user_level', $id_user_level,'DESC') ?>
+              <!--<input type="text" class="form-control" name="id_user_level" id="id_user_level" placeholder="Id User Level" value="<?php echo $id_user_level; ?>" />-->
+            </td>
+          </tr>
+
+          <tr>
+            <td width='200'>Status Aktif <?php echo form_error('is_aktif') ?></td>
+            <td>
+              <?php echo form_dropdown('is_aktif', array('y' => 'AKTIF', 'n' => 'TIDAK AKTIF'), $is_aktif, array('class' => 'form-control')); ?>
+            </td>
+          </tr>
+
+          <?php } ?>
+
           <tr>
             <td width='200'>Profile </td>
             <td>
@@ -68,7 +104,8 @@
 
           <tr>
             <td>
-              <!-- <input type="hidden" name="id_users" value="<?php echo $id_users; ?>" /> -->
+              <input type="hidden" name="id_users" value="<?php echo $id_users; ?>" />
+              <input type="hidden" name="images" value="<?= $images?>"/>
               <button type="submit" class="btn btn-danger">
                 <i class="fa fa-floppy-o"></i>
                 <?php echo $button ?>
@@ -83,5 +120,6 @@
         </table>
       </form>
     </div>
+  </section>
 </div>
 </div>

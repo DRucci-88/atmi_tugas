@@ -25,6 +25,14 @@
                                 value="<?php echo $email; ?>" /></td>
                     </tr>
 
+                    <tr>
+                        <td width='200'>Password <?php echo form_error('password') ?></td>
+                        <td>
+                            <input type="text" readonly class="form-control" name="password" id="password"
+                                placeholder="Password" value="<?php echo $password; ?>" />
+                        </td>
+                    </tr>
+
                     <?php if (strcmp(strtolower($button), 'create') === 0) {?>
                     <tr>
                         <td width='200'>Password <?php echo form_error('password') ?></td>
@@ -53,13 +61,13 @@
                         <td> <input type="file" name="images"></td>
                     </tr>
 
-                    <!-- <tr>
+                    <tr>
                         <td width='200'>Profile </td>
                         <td>
-                            <img src="<?php echo base_url() ?>assets/foto_profil/<?= $images?>"
+                            <img width="400px" src="<?php echo base_url() ?>assets/foto_profil/<?= $images?>"
                                 class="user-image" alt="User Image">
                         </td>
-                    </tr> -->
+                    </tr>
 
                     <tr>
                         <td>

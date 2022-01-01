@@ -109,19 +109,19 @@ class User extends CI_Controller
             if(strcmp($this->newData['user']['id_user_level'],'3') === 0){
                 $this->create_mahasiswa();
                 // var_dump($this->newData);
+                return;
             }
             
-            // $this->User_model->insert($this->newData['user']);
-            // $this->Mahasiswa_model->insert($data['mahasiswa']);
-            // $this->session->set_flashdata('message', 'Create Record Success');
-            // redirect(site_url('user'));
+            $this->User_model->insert($this->newData['user']);
+            $this->session->set_flashdata('message', 'Create Record Success');
+            redirect(site_url('user'));
         }
     }
 
     public function create_mahasiswa(){
         // var_dump($this->newData['user']);
         $data = [
-            'button' => 'insert',
+            'button' => 'Insert',
             'action' => site_url('user/create_action_mahasiswa'),
             'full_name' => $this->newData['user']['full_name'],
             'nim'           => set_value('nim'),
@@ -165,40 +165,30 @@ class User extends CI_Controller
     {
         $user = $this->User_model->get_by_id($id);
 
-        if ($user || strcmp($user['is_user_level'], '3') === 0){
-            $this->update_mahasiswa($id);
+        if ($user && strcmp($user['id_user_level'], '3') === 0){
+            $this->update_mahasiswa($user);
             return;
         }
 
-        var_dump($user);
+        // var_dump($user);
+        $data = [
+            'full_name'     => set_value('full_name', $user['full_name']),
+            'button'        => 'Update',
+            'action'        => site_url('user/update_action'),
+            'id_users'      => set_value('id_users', $user['id_users']),
+            'email'         => set_value('email', $user['email']),
+            'password'      => set_value('password', $user['password']),
+            'images'        => set_value('images', $user['images']),
+            'id_user_level' => set_value('id_user_level', $user['id_user_level']),
+            'is_aktif'      => set_value('is_aktif', $user['is_aktif'])
+        ];
         
-
-        // $data = [
-        //     // BIODATA MAHASISWA
-        //     'full_name'     => set_value('full_name', $mahasiswa['mahasiswa_name']),
-        //     'nim'           => set_value('nim', $mahasiswa['mahasiswa_nim']),
-        //     'jurusan'       => set_value('jurusan', $mahasiswa['mahasiswa_jurusan']),
-        //     'asal_sekolah'  => set_value('asal_sekolah', $mahasiswa['mahasiswa_asal_sekolah']),
-        //     'tanggal_lahir' => set_value('tanggal_lahir', $mahasiswa['mahasiswa_tanggal_lahir']),
-        //     'nomor_telepon' => set_value('nomor_telepon', $mahasiswa['mahasiswa_nomor_telepon']),
-
-        //     // USER
-        //     'button'        => 'Update',
-        //     'action'        => site_url('user/update_action'),
-        //     'id_users'      => set_value('id_users', $user['id_users']),
-        //     'email'         => set_value('email', $user['email']),
-        //     'password'      => set_value('password', $user['password']),
-        //     'images'        => set_value('images', $user['images']),
-        //     'id_user_level' => set_value('id_user_level', $user['id_user_level']),
-        //     'is_aktif'      => set_value('is_aktif', $user['is_aktif'])
-        // ];
-
-        // if ($user !== null || $mahasiswa !== null) {
-        //     $this->template->load('template','user/tbl_user_form', $data);
-        // } else {
-        //     $this->session->set_flashdata('message', 'Record Not Found');
-        //     redirect(site_url('user'));
-        // }
+        if ($user !== null) {
+            $this->template->load('template','user/tbl_user_form', $data);
+        } else {
+            $this->session->set_flashdata('message', 'Record Not Found');
+            redirect(site_url('user'));
+        }
     }
     
     public function update_action() 
@@ -208,7 +198,7 @@ class User extends CI_Controller
         if ($this->form_validation->run() == FALSE) {
             $this->update($this->input->post('id_users', TRUE));
         } else {
-            if($foto['file_name']==''){
+            if($foto['file_name']===''){
                 $data = array(
                     'full_name'     => $this->input->post('full_name',TRUE),
                     'email'         => $this->input->post('email',TRUE),
@@ -232,9 +222,57 @@ class User extends CI_Controller
         }
     }
     
-    public function update_mahasiswa($id){
-        $mahasiswa = $this->Mahasiswa_model->get_by_id($id);
-        var_dump($mahasiswa);
+    public function update_mahasiswa($user){
+        $mahasiswa = $this->Mahasiswa_model->get_by_id($user['id_users']);
+        // var_dump($mahasiswa);
+        // var_dump($user);
+
+        $data = [
+            // BIODATA MAHASISWA
+            'full_name'     => set_value('full_name', $mahasiswa['mahasiswa_name']),
+            'nim'           => set_value('nim', $mahasiswa['mahasiswa_nim']),
+            'jurusan'       => set_value('jurusan', $mahasiswa['mahasiswa_jurusan']),
+            'asal_sekolah'  => set_value('asal_sekolah', $mahasiswa['mahasiswa_asal_sekolah']),
+            'tanggal_lahir' => set_value('tanggal_lahir', $mahasiswa['mahasiswa_tanggal_lahir']),
+            'nomor_telepon' => set_value('nomor_telepon', $mahasiswa['mahasiswa_nomor_telepon']),
+
+            // USER
+            'button'        => 'Update',
+            'action'        => site_url('user/update_action_mahasiswa'),
+            'id_users'      => set_value('id_users', $user['id_users']),
+            'email'         => set_value('email', $user['email']),
+            'password'      => set_value('password', $user['password']),
+            'images'        => set_value('images', $user['images']),
+            'id_user_level' => set_value('id_user_level', $user['id_user_level']),
+            'is_aktif'      => set_value('is_aktif', $user['is_aktif'])
+        ];
+        $this->template->load('template', 'user/tbl_mahasiswa_form', $data);
+        
+    }
+
+    public function update_action_mahasiswa(){
+        // var_dump($this->input->post());
+        $mahasiswa = [
+            'mahasiswa_id'              => $this->input->post('id_users', TRUE),
+            'mahasiswa_name'            => $this->input->post('full_name', TRUE),
+            'mahasiswa_nim'             => $this->input->post('nim', TRUE),
+            'mahasiswa_jurusan'         => $this->input->post('jurusan', TRUE),
+            'mahasiswa_asal_sekolah'    => $this->input->post('asal_sekolah', TRUE),
+            'mahasiswa_tanggal_lahir'   => $this->input->post('tanggal_lahir', TRUE),
+            'mahasiswa_nomor_telepon'   => $this->input->post('nomor_telepon', TRUE),
+        ];
+        $user = array(
+            'id_users'      => $this->input->post('id_users', TRUE),
+            'full_name'     => $this->input->post('full_name',TRUE),
+            'email'         => $this->input->post('email',TRUE),
+            'password'      => $this->input->post('password', TRUE),
+            'images'        => $this->input->post('images', TRUE),
+            'id_user_level' => $this->input->post('id_user_level',TRUE),
+            'is_aktif'      => $this->input->post('is_aktif',TRUE)
+        );
+        $this->User_model->update($user['id_users'], $user);
+        $this->Mahasiswa_model->update($mahasiswa['mahasiswa_id'], $mahasiswa);
+        redirect(site_url('user'));
     }
 
     function upload_foto(){

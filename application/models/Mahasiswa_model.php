@@ -23,4 +23,8 @@ class Mahasiswa_model extends CI_Model
       $this->id => $id
     ])->row_array();
   }
+  function update($id, $data){
+    $this->db->where($this->id, $id);
+    $this->db->update($this->table, $data);
+  }
 }
