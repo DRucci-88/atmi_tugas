@@ -91,7 +91,7 @@ class User extends CI_Controller
 
             $this->db->select_max('id_users');
             $availableId = (int) $this->db->get('tbl_user')->row_array()['id_users'] + 1;
-            // var_dump($availableId);
+            // var_dump($availableId);l
             // var_dump($this->input->post());
 
             // USER
