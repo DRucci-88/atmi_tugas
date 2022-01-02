@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 01, 2022 at 12:03 PM
+-- Generation Time: Jan 02, 2022 at 11:41 AM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.4.14
 
@@ -43,6 +43,8 @@ CREATE TABLE `mahasiswa` (
 
 INSERT INTO `mahasiswa` (`mahasiswa_id`, `mahasiswa_name`, `mahasiswa_nim`, `mahasiswa_jurusan`, `mahasiswa_asal_sekolah`, `mahasiswa_tanggal_lahir`, `mahasiswa_nomor_telepon`) VALUES
 ('10', 'Asep Budi Naik', '006', 'Tataboga', 'SMA Padang Pasir', '2021-12-01', '08953520000'),
+('11', 'Udin Sedunia', '0012', 'Teknik Mesin Industry', 'SMK Ultraman', '2021-11-30', '08794651111123'),
+('12', 'Trello Jika', '015', 'dis', 'Teknik Mesin Industry', '2021-12-08', '08953520000'),
 ('8', 'William Adisurya', '003', 'Teknik Rekayasa Mekatronika', 'SMA Tadika Mesra', '2000-12-01', '08789456');
 
 -- --------------------------------------------------------
@@ -198,7 +200,9 @@ INSERT INTO `tbl_user` (`id_users`, `full_name`, `email`, `password`, `images`, 
 (7, 'Administrator', 'admin@polinatmi.ac.id', '$2y$04$6wapLIUsd2.ACt8L6Xo.3eo197IIb5LAlpEV.ti5GLu6EgTJKxUNW', 'admin.png', 1, 'y'),
 (8, 'William Adisurya', 'william@gmail.com', '$2y$04$QGeBtroqn6MMiOShH0JqH.vbECoDTOtbO0kHB5X2WkxCrqhQSW4HC', 'wil.jpg', 3, 'y'),
 (9, 'Jipak Ukulele', 'jipak@gmail.com', '$2y$04$NV85071spzRVRK.IROIFwOEUu5zgGwtVA3ljiV7Bb.SFj8Is3SF9S', 'kucing.jpg', 4, 'y'),
-(10, 'Asep Budi Naik', 'asep@gmail.com', '$2y$04$zwrfzUuNLBSikDlbsunUNewt2upGsKL8vayDK3vnHRtZeRMCn4Yp2', 'monochrome12.jpg', 3, 'y');
+(10, 'Asep Budi Naik', 'asep@gmail.com', '$2y$04$zwrfzUuNLBSikDlbsunUNewt2upGsKL8vayDK3vnHRtZeRMCn4Yp2', 'monochrome12.jpg', 3, 'y'),
+(11, 'Udin Sedunia', 'udin@gmail.com', '$2y$04$.V6Gr7XsuEgvHIvQz4UVpeTFwB.5zH2S8cFVxmq8YBLhL6.PsUb02', 'Avatar1.svg', 3, 'y'),
+(12, 'Trello Jika', 'trello@gmail.com', '$2y$04$LhM9DytkHRBocfIaBT9Qmu96B4Ob.GNp9fov7OYk0EN/JzMRD6ldC', 'Swaq_Face_cut.jpg', 3, 'y');
 
 -- --------------------------------------------------------
 
@@ -312,7 +316,7 @@ ALTER TABLE `tbl_setting`
 -- AUTO_INCREMENT for table `tbl_user`
 --
 ALTER TABLE `tbl_user`
-  MODIFY `id_users` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_users` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `tbl_user_level`
