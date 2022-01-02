@@ -18,7 +18,7 @@ Class Auth extends CI_Controller{
         if($users->num_rows()>0){
             $user = $users->row_array();
             // var_dump($user);
-            if(password_verify($password,$user['password'])){
+            if(password_verify($password,$user['password'])){ 
                 // retrive user data to session
                 $this->session->set_userdata($user);
                 redirect('welcome');
