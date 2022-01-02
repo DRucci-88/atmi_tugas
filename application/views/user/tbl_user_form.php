@@ -25,20 +25,21 @@
                                 value="<?php echo $email; ?>" /></td>
                     </tr>
 
-                    <tr>
-                        <td width='200'>Password <?php echo form_error('password') ?></td>
-                        <td>
-                            <input type="text" readonly class="form-control" name="password" id="password"
-                                placeholder="Password" value="<?php echo $password; ?>" />
-                        </td>
-                    </tr>
-
                     <?php if (strcmp(strtolower($button), 'create') === 0) {?>
                     <tr>
                         <td width='200'>Password <?php echo form_error('password') ?></td>
                         <td>
                             <input type="text" class="form-control" name="password" id="password" placeholder="Password"
                                 value="<?php echo $password; ?>" />
+                        </td>
+                    </tr>
+                    <?php } else {?>
+
+                    <tr>
+                        <td width='200'>Password <?php echo form_error('password') ?></td>
+                        <td>
+                            <input type="text" readonly class="form-control" name="password" id="password"
+                                placeholder="Password" value="<?php echo $password; ?>" />
                         </td>
                     </tr>
                     <?php } ?>
@@ -60,7 +61,8 @@
                         <td width='200'>Foto Profile <?php echo form_error('images') ?></td>
                         <td> <input type="file" name="images"></td>
                     </tr>
-
+                    
+                    <?php if (strcmp(strtolower($button), 'create') !== 0) {?>
                     <tr>
                         <td width='200'>Profile </td>
                         <td>
@@ -68,6 +70,7 @@
                                 class="user-image" alt="User Image">
                         </td>
                     </tr>
+                    <?php } ?>
 
                     <tr>
                         <td>

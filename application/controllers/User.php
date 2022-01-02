@@ -123,8 +123,10 @@ class User extends CI_Controller
         $data = [
             'button' => 'Insert',
             'action' => site_url('user/create_action_mahasiswa'),
+            'id_users' => $this->newData['user']['id_users'],
             'full_name' => $this->newData['user']['full_name'],
             'nim'           => set_value('nim'),
+            'password'      => set_value('password'),
             'jurusan'       => set_value('jurusan'),
             'asal_sekolah'  => set_value('asal_sekolah'),
             'tanggal_lahir' => set_value('tanggal_lahir'),
@@ -342,26 +344,26 @@ class User extends CI_Controller
 
         $kolomhead = 0;
         xlsWriteLabel($tablehead, $kolomhead++, "No");
-	xlsWriteLabel($tablehead, $kolomhead++, "Full Name");
-	xlsWriteLabel($tablehead, $kolomhead++, "Email");
-	xlsWriteLabel($tablehead, $kolomhead++, "Password");
-	xlsWriteLabel($tablehead, $kolomhead++, "Images");
-	xlsWriteLabel($tablehead, $kolomhead++, "Id User Level");
-	xlsWriteLabel($tablehead, $kolomhead++, "Is Aktif");
+        xlsWriteLabel($tablehead, $kolomhead++, "Full Name");
+        xlsWriteLabel($tablehead, $kolomhead++, "Email");
+        xlsWriteLabel($tablehead, $kolomhead++, "Password");
+        xlsWriteLabel($tablehead, $kolomhead++, "Images");
+        xlsWriteLabel($tablehead, $kolomhead++, "Id User Level");
+        xlsWriteLabel($tablehead, $kolomhead++, "Is Aktif");
 
-	foreach ($this->User_model->get_all() as $data) {
+        foreach ($this->User_model->get_all() as $data) {
             $kolombody = 0;
 
             //ubah xlsWriteLabel menjadi xlsWriteNumber untuk kolom numeric
             xlsWriteNumber($tablebody, $kolombody++, $nourut);
-	    xlsWriteLabel($tablebody, $kolombody++, $data->full_name);
-	    xlsWriteLabel($tablebody, $kolombody++, $data->email);
-	    xlsWriteLabel($tablebody, $kolombody++, $data->password);
-	    xlsWriteLabel($tablebody, $kolombody++, $data->images);
-	    xlsWriteNumber($tablebody, $kolombody++, $data->id_user_level);
-	    xlsWriteLabel($tablebody, $kolombody++, $data->is_aktif);
+            xlsWriteLabel($tablebody, $kolombody++, $data->full_name);
+            xlsWriteLabel($tablebody, $kolombody++, $data->email);
+            xlsWriteLabel($tablebody, $kolombody++, $data->password);
+            xlsWriteLabel($tablebody, $kolombody++, $data->images);
+            xlsWriteNumber($tablebody, $kolombody++, $data->id_user_level);
+            xlsWriteLabel($tablebody, $kolombody++, $data->is_aktif);
 
-	    $tablebody++;
+            $tablebody++;
             $nourut++;
         }
 
